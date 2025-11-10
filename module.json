@@ -32,9 +32,9 @@
   "styles": [
     "styles/chat-helper.css"
   ],
-  "url": "",
-  "manifest": "",
-  "download": "",
+  "url": "https://github.com/Nyendra/nyendras-steew-cooker",
+  "manifest": "https://github.com/Nyendra/nyendras-steew-cooker/releases/download/1.0.0/module.json",
+  "download": "https://github.com/Nyendra/nyendras-steew-cooker/releases/download/1.0.0/module.zip",
   "license": "",
   "readme": "",
   "bugs": ""
