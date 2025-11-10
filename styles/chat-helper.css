@@ -1,0 +1,36 @@
+/**
+ * Nyendra's Steew Cooker - Chat Helper Styles
+ */
+
+.chat-delete-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  padding: 2px 4px;
+  color: var(--color-text-dark-secondary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.chat-delete-button:hover {
+  color: var(--color-text-light-highlight);
+  text-shadow: 0 0 8px var(--color-shadow-primary);
+}
+
+.chat-delete-button i {
+  font-size: 0.875em;
+}
+
+/* Ensure the delete button aligns properly with other message controls */
+.message-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.message-header .message-metadata {
+  display: inline-flex;
+  align-items: center;
+}
