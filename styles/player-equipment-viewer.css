@@ -232,6 +232,34 @@
 	color: var(--color-text-primary);
 }
 
+.player-equipment-viewer .item-stat {
+	flex: 0 0 50px;
+	text-align: right;
+	font-size: 0.85em;
+	color: var(--color-text-dark-secondary);
+	font-weight: 500;
+}
+
+.player-equipment-viewer .reset-stats-btn {
+	flex: 0 0 30px;
+	padding: 4px;
+	background: rgba(0, 0, 0, 0.1);
+	color: var(--color-text-primary);
+	border: 1px solid var(--color-border-light-tertiary);
+	border-radius: 3px;
+	cursor: pointer;
+	font-size: 0.8em;
+	transition: background 0.2s, color 0.2s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.player-equipment-viewer .reset-stats-btn:hover {
+	background: rgba(0, 0, 0, 0.15);
+	color: var(--color-border-highlight);
+}
+
 .player-equipment-viewer .item-percentage {
 	flex: 0 0 50px;
 	text-align: right;

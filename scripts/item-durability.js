@@ -26,6 +26,88 @@ export class ItemDurability {
 	}
 
 	/**
+	 * Get the attack rolls count for a weapon
+	 * @param {Item} item - The item to check
+	 * @returns {number} Number of attack rolls
+	 */
+	static getAttackRolls(item) {
+		return item.getFlag("nyendras-steew-cooker", "attackRolls") ?? 0;
+	}
+
+	/**
+	 * Set the attack rolls count for a weapon
+	 * @param {Item} item - The item to update
+	 * @param {number} value - Number of attack rolls
+	 */
+	static async setAttackRolls(item, value) {
+		await item.setFlag("nyendras-steew-cooker", "attackRolls", Number(value));
+	}
+
+	/**
+	 * Increment the attack rolls count for a weapon
+	 * @param {Item} item - The item to update
+	 */
+	static async incrementAttackRolls(item) {
+		const current = this.getAttackRolls(item);
+		await this.setAttackRolls(item, current + 1);
+	}
+
+	/**
+	 * Get the damage rolls count for a weapon
+	 * @param {Item} item - The item to check
+	 * @returns {number} Number of damage rolls
+	 */
+	static getDamageRolls(item) {
+		return item.getFlag("nyendras-steew-cooker", "damageRolls") ?? 0;
+	}
+
+	/**
+	 * Set the damage rolls count for a weapon
+	 * @param {Item} item - The item to update
+	 * @param {number} value - Number of damage rolls
+	 */
+	static async setDamageRolls(item, value) {
+		await item.setFlag("nyendras-steew-cooker", "damageRolls", Number(value));
+	}
+
+	/**
+	 * Increment the damage rolls count for a weapon
+	 * @param {Item} item - The item to update
+	 */
+	static async incrementDamageRolls(item) {
+		const current = this.getDamageRolls(item);
+		await this.setDamageRolls(item, current + 1);
+	}
+
+	/**
+	 * Get the damage taken for equipment
+	 * @param {Item} item - The item to check
+	 * @returns {number} Total damage taken
+	 */
+	static getDamageTaken(item) {
+		return item.getFlag("nyendras-steew-cooker", "damageTaken") ?? 0;
+	}
+
+	/**
+	 * Set the damage taken for equipment
+	 * @param {Item} item - The item to update
+	 * @param {number} value - Total damage taken
+	 */
+	static async setDamageTaken(item, value) {
+		await item.setFlag("nyendras-steew-cooker", "damageTaken", Number(value));
+	}
+
+	/**
+	 * Add damage taken to equipment
+	 * @param {Item} item - The item to update
+	 * @param {number} amount - Damage amount to add
+	 */
+	static async addDamageTaken(item, amount) {
+		const current = this.getDamageTaken(item);
+		await this.setDamageTaken(item, current + amount);
+	}
+
+	/**
 	 * Get the tier for a given durability value
 	 * @param {number} durability - Durability percentage
 	 * @returns {Object} Tier object with threshold, name, and color
@@ -198,3 +280,71 @@ function addDurabilityToSheet(sheet, html) {
 		}
 	});
 }
+
+/**
+ * Track attack and damage rolls for weapons
+ */
+Hooks.on("createChatMessage", async (message) => {
+	// Check if this is a roll message
+	if (!message.rolls || message.rolls.length === 0) return;
+
+	// Get the actor from the message
+	const actor = message.speaker?.actor ? game.actors.get(message.speaker.actor) : null;
+	if (!actor) return;
+
+	// Get the item ID from the message flags (dnd5e v3+ structure)
+	const itemId = message.flags?.dnd5e?.item?.id;
+	if (!itemId) return;
+
+	const item = actor.items.get(itemId);
+	if (!item || item.type !== "weapon") return;
+
+	// Check if item is equipped
+	if (!item.system.equipped) return;
+
+	// Determine if this is an attack roll or damage roll
+	const rollType = message.flags?.dnd5e?.roll?.type;
+
+	if (rollType === "attack") {
+		await ItemDurability.incrementAttackRolls(item);
+	} else if (rollType === "damage") {
+		await ItemDurability.incrementDamageRolls(item);
+	}
+});
+
+/**
+ * Track damage taken for equipped equipment
+ */
+Hooks.on("preUpdateActor", async (actor, changes, options, userId) => {
+	// Only track for characters
+	if (actor.type !== "character") return;
+
+	// Check if HP is being changed
+	if (changes.system?.attributes?.hp?.value === undefined) return;
+
+	const oldHP = actor.system.attributes.hp.value;
+	const newHP = changes.system.attributes.hp.value;
+
+	// Only track when HP is reduced
+	if (newHP >= oldHP) return;
+
+	const damageTaken = oldHP - newHP;
+
+	// Store the damage to apply after the update
+	// We need to do this in preUpdate to get the correct old HP value
+	options.durabilityDamageTaken = damageTaken;
+});
+
+Hooks.on("updateActor", async (actor, changes, options, userId) => {
+	// Check if we stored damage to track
+	if (!options.durabilityDamageTaken) return;
+
+	const damageTaken = options.durabilityDamageTaken;
+
+	// Add damage to all equipped equipment
+	for (const item of actor.items) {
+		if (item.type === "equipment" && item.system.equipped) {
+			await ItemDurability.addDamageTaken(item, damageTaken);
+		}
+	}
+});

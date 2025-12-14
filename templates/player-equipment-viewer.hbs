@@ -82,6 +82,11 @@
 										<input type="checkbox" class="item-checkbox" data-item-id="{{id}}" data-player-id="{{../id}}" disabled />
 										<img src="{{img}}" alt="{{name}}" class="item-img"/>
 										<span class="item-name">{{name}}</span>
+										<span class="item-stat">A: {{attackRolls}}</span>
+										<span class="item-stat">D: {{damageRolls}}</span>
+										<button type="button" class="reset-stats-btn" data-item-id="{{id}}" data-player-id="{{../id}}" title="Reset stats">
+											<i class="fas fa-redo"></i>
+										</button>
 										<span class="item-percentage">{{durability}}%</span>
 										<span class="item-status {{durabilityClass}}" style="color: {{durabilityColor}}; background-color: {{durabilityColor}}20;">{{durabilityLabel}}</span>
 									</div>
@@ -101,6 +106,10 @@
 										<input type="checkbox" class="item-checkbox" data-item-id="{{id}}" data-player-id="{{../id}}" disabled />
 										<img src="{{img}}" alt="{{name}}" class="item-img"/>
 										<span class="item-name">{{name}}</span>
+										<span class="item-stat">DMG: {{damageTaken}}</span>
+										<button type="button" class="reset-stats-btn" data-item-id="{{id}}" data-player-id="{{../id}}" title="Reset stats">
+											<i class="fas fa-redo"></i>
+										</button>
 										<span class="item-percentage">{{durability}}%</span>
 										<span class="item-status {{durabilityClass}}" style="color: {{durabilityColor}}; background-color: {{durabilityColor}}20;">{{durabilityLabel}}</span>
 									</div>

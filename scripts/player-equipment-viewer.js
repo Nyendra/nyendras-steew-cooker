@@ -16,7 +16,7 @@ export class PlayerEquipmentViewer extends foundry.applications.api.HandlebarsAp
 		},
 		position: {
 			width: 700,
-			height: 600
+			height: 900
 		},
 		actions: {},
 		form: {
@@ -46,9 +46,9 @@ export class PlayerEquipmentViewer extends foundry.applications.api.HandlebarsAp
 			const character = player.character;
 			if (!character) return;
 
-			const playerId = `player-${index}`;
 			const playerData = {
-				id: playerId,
+				id: player.id,
+				userId: player.id,
 				name: player.name,
 				characterName: character.name,
 				weapons: [],
@@ -67,7 +67,10 @@ export class PlayerEquipmentViewer extends foundry.applications.api.HandlebarsAp
 					durability: durability,
 					durabilityLabel: ItemDurability.getDurabilityLabel(durability),
 					durabilityClass: ItemDurability.getDurabilityColorClass(durability),
-					durabilityColor: ItemDurability.getDurabilityColor(durability)
+					durabilityColor: ItemDurability.getDurabilityColor(durability),
+					attackRolls: item.type === "weapon" ? ItemDurability.getAttackRolls(item) : null,
+					damageRolls: item.type === "weapon" ? ItemDurability.getDamageRolls(item) : null,
+					damageTaken: item.type === "equipment" ? ItemDurability.getDamageTaken(item) : null
 				};
 
 				// Add to appropriate category
@@ -132,6 +135,16 @@ export class PlayerEquipmentViewer extends foundry.applications.api.HandlebarsAp
 				this.close();
 			});
 		}
+
+		// Handle reset stats buttons
+		htmlElement.querySelectorAll('.reset-stats-btn').forEach(btn => {
+			btn.addEventListener('click', async (event) => {
+				event.stopPropagation();
+				const itemId = btn.dataset.itemId;
+				const playerId = btn.dataset.playerId;
+				await this._handleResetStats(playerId, itemId);
+			});
+		});
 	}
 
 	async _handleReduceDurability(htmlElement) {
@@ -173,10 +186,8 @@ export class PlayerEquipmentViewer extends foundry.applications.api.HandlebarsAp
 		let itemsAffected = 0;
 
 		for (const player of players) {
-			const playerId = `player-${players.indexOf(player)}`;
-
 			// Check if this player should be processed
-			if (playerSelection === 'selected' && !selectedPlayerIds.includes(playerId)) continue;
+			if (playerSelection === 'selected' && !selectedPlayerIds.includes(player.id)) continue;
 
 			const character = player.character;
 			if (!character) continue;
@@ -199,7 +210,45 @@ export class PlayerEquipmentViewer extends foundry.applications.api.HandlebarsAp
 		}
 
 		ui.notifications.info(`Reduced durability by ${amount}% for ${itemsAffected} item(s).`);
-		this.render();
+
+		// Update durability values in the DOM without re-rendering
+		for (const player of players) {
+			const character = player.character;
+			if (!character) continue;
+
+			for (const item of character.items) {
+				if (!item.system.equipped) continue;
+				if (item.type !== 'weapon' && item.type !== 'equipment') continue;
+
+				// Find the durability display for this item
+				const itemElement = htmlElement.querySelector(`[data-item-id="${item.id}"]`);
+				if (!itemElement) continue;
+
+				const itemRow = itemElement.closest('.item-row');
+				if (!itemRow) continue;
+
+				// Update the percentage display
+				const percentageElement = itemRow.querySelector('.item-percentage');
+				if (percentageElement) {
+					const newDurability = ItemDurability.getDurability(item);
+					percentageElement.textContent = `${newDurability}%`;
+				}
+
+				// Update the status label
+				const statusElement = itemRow.querySelector('.item-status');
+				if (statusElement) {
+					const newDurability = ItemDurability.getDurability(item);
+					const newLabel = ItemDurability.getDurabilityLabel(newDurability);
+					const newColor = ItemDurability.getDurabilityColor(newDurability);
+					const newClass = ItemDurability.getDurabilityColorClass(newDurability);
+
+					statusElement.textContent = newLabel;
+					statusElement.className = `item-status ${newClass}`;
+					statusElement.style.color = newColor;
+					statusElement.style.backgroundColor = `${newColor}20`;
+				}
+			}
+		}
 	}
 
 	_handleReset(htmlElement) {
@@ -232,5 +281,46 @@ export class PlayerEquipmentViewer extends foundry.applications.api.HandlebarsAp
 			cb.disabled = true;
 			cb.checked = false;
 		});
+	}
+
+	async _handleResetStats(playerId, itemId) {
+		// Get the player (user)
+		const user = game.users.get(playerId);
+		if (!user) return;
+
+		// Get the character for this player
+		const character = user.character;
+		if (!character) return;
+
+		// Get the item
+		const item = character.items.get(itemId);
+		if (!item) return;
+
+		// Reset stats based on item type
+		if (item.type === "weapon") {
+			await ItemDurability.setAttackRolls(item, 0);
+			await ItemDurability.setDamageRolls(item, 0);
+			ui.notifications.info(`Reset attack and damage roll stats for ${item.name}.`);
+
+			// Update the DOM directly
+			const htmlElement = this.element;
+			const itemRow = htmlElement.querySelector(`[data-item-id="${item.id}"]`)?.closest('.item-row');
+			if (itemRow) {
+				const statElements = itemRow.querySelectorAll('.item-stat');
+				if (statElements[0]) statElements[0].textContent = 'A: 0';
+				if (statElements[1]) statElements[1].textContent = 'D: 0';
+			}
+		} else if (item.type === "equipment") {
+			await ItemDurability.setDamageTaken(item, 0);
+			ui.notifications.info(`Reset damage taken for ${item.name}.`);
+
+			// Update the DOM directly
+			const htmlElement = this.element;
+			const itemRow = htmlElement.querySelector(`[data-item-id="${item.id}"]`)?.closest('.item-row');
+			if (itemRow) {
+				const statElement = itemRow.querySelector('.item-stat');
+				if (statElement) statElement.textContent = 'DMG: 0';
+			}
+		}
 	}
 }
