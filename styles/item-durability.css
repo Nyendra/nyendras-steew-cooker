@@ -1,0 +1,136 @@
+/* Item Durability Styles */
+
+/* Character Sheet Durability Column (dnd5e v3+ structure) */
+.item-header[data-column-id="durability"],
+.item-detail[data-column-id="durability"] {
+	flex: 0 0 60px !important;
+	min-width: 60px;
+	max-width: 60px;
+	width: 60px;
+	text-align: center;
+	justify-content: center;
+}
+
+.item-detail[data-column-id="durability"] {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.9em;
+}
+
+.item-detail.item-durability .durability-value {
+	font-weight: 500;
+}
+
+/* Color coding based on durability (0% = broken, 100% = good) */
+.durability-good {
+	color: #18520b;
+}
+
+.durability-worn {
+	color: #856404;
+}
+
+.durability-slightly-damaged {
+	color: #cc6600;
+}
+
+.durability-heavily-damaged {
+	color: #c92a2a;
+	font-weight: bold;
+}
+
+.durability-broken {
+	color: #c92a2a;
+	font-weight: bold;
+}
+
+/* Equipment Viewer Durability Display */
+.player-equipment-viewer .item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.player-equipment-viewer .item-durability {
+	margin-left: auto;
+	font-size: 0.85em;
+	padding: 2px 6px;
+	border-radius: 3px;
+	white-space: nowrap;
+}
+
+.player-equipment-viewer .item-durability.durability-good {
+	background: rgba(24, 82, 11, 0.15);
+	color: #18520b;
+}
+
+.player-equipment-viewer .item-durability.durability-worn {
+	background: rgba(133, 100, 4, 0.15);
+	color: #856404;
+}
+
+.player-equipment-viewer .item-durability.durability-slightly-damaged {
+	background: rgba(204, 102, 0, 0.15);
+	color: #cc6600;
+}
+
+.player-equipment-viewer .item-durability.durability-heavily-damaged {
+	background: rgba(201, 42, 42, 0.15);
+	color: #c92a2a;
+	font-weight: bold;
+}
+
+.player-equipment-viewer .item-durability.durability-broken {
+	background: rgba(201, 42, 42, 0.15);
+	color: #c92a2a;
+	font-weight: bold;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+	.durability-good {
+		color: #51cf66;
+	}
+
+	.durability-worn {
+		color: #ffd43b;
+	}
+
+	.durability-slightly-damaged {
+		color: #ff922b;
+	}
+
+	.durability-heavily-damaged {
+		color: #ff6b6b;
+	}
+
+	.durability-broken {
+		color: #ff6b6b;
+	}
+
+	.player-equipment-viewer .item-durability.durability-good {
+		background: rgba(81, 207, 102, 0.2);
+		color: #51cf66;
+	}
+
+	.player-equipment-viewer .item-durability.durability-worn {
+		background: rgba(255, 212, 59, 0.2);
+		color: #ffd43b;
+	}
+
+	.player-equipment-viewer .item-durability.durability-slightly-damaged {
+		background: rgba(255, 146, 43, 0.2);
+		color: #ff922b;
+	}
+
+	.player-equipment-viewer .item-durability.durability-heavily-damaged {
+		background: rgba(255, 107, 107, 0.2);
+		color: #ff6b6b;
+	}
+
+	.player-equipment-viewer .item-durability.durability-broken {
+		background: rgba(255, 107, 107, 0.2);
+		color: #ff6b6b;
+	}
+}

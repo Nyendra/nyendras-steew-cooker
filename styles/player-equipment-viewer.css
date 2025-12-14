@@ -1,0 +1,290 @@
+/* Player Equipment Viewer Styles */
+
+.player-equipment-viewer {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	gap: 15px;
+}
+
+/* Reduce Durability Section */
+.reduce-durability-section {
+	background: rgba(0, 0, 0, 0.05);
+	padding: 15px;
+	border-radius: 5px;
+	border: 1px solid var(--color-border-light-tertiary);
+}
+
+.reduce-durability-section h3 {
+	margin: 0 0 15px 0;
+	color: var(--color-text-heading);
+	font-size: 1.1em;
+}
+
+.reduce-durability-section .form-group {
+	margin-bottom: 12px;
+}
+
+.reduce-durability-section .form-group.inline-group {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.reduce-durability-section .form-group.inline-group > label {
+	font-weight: 600;
+	margin: 0;
+	color: var(--color-text-heading);
+}
+
+.reduce-durability-section .form-group > label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 5px;
+	color: var(--color-text-heading);
+}
+
+.reduce-durability-section input[type="number"] {
+	width: 100px;
+	padding: 4px 8px;
+	border: 1px solid var(--color-border-light-tertiary);
+	border-radius: 3px;
+	background: var(--dnd5e-color-card);
+}
+
+.reduce-durability-section .form-row {
+	display: flex;
+	gap: 15px;
+	margin-bottom: 12px;
+}
+
+.reduce-durability-section .form-group.half-width {
+	flex: 1;
+	min-width: 0;
+}
+
+.reduce-durability-section .radio-group {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.reduce-durability-section .radio-group label,
+.reduce-durability-section .player-checkboxes label {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	cursor: pointer;
+}
+
+.reduce-durability-section .player-checkboxes {
+	padding-left: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	margin-top: 8px;
+}
+
+.reduce-durability-section .player-checkboxes[data-enabled="false"] {
+	opacity: 0.5;
+}
+
+.reduce-durability-section .button-group {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+	margin-top: 15px;
+}
+
+.reduce-durability-section .reduce-durability-btn,
+.reduce-durability-section .reset-btn {
+	padding: 8px 16px;
+	background: rgba(0, 0, 0, 0.1);
+	color: var(--color-text-primary);
+	border: 1px solid var(--color-border-light-tertiary);
+	border-radius: 4px;
+	cursor: pointer;
+	font-weight: 600;
+	font-size: 14px;
+	transition: background 0.2s;
+}
+
+.reduce-durability-section .reduce-durability-btn:hover,
+.reduce-durability-section .reset-btn:hover {
+	background: rgba(0, 0, 0, 0.15);
+}
+
+.player-equipment-viewer .close-button-container {
+	padding: 15px 0 0 0;
+	border-top: 1px solid var(--color-border-light-tertiary);
+	margin-top: 15px;
+}
+
+.player-equipment-viewer .close-btn {
+	width: 100%;
+	padding: 8px 16px;
+	background: rgba(0, 0, 0, 0.1);
+	color: var(--color-text-primary);
+	border: 1px solid var(--color-border-light-tertiary);
+	border-radius: 4px;
+	cursor: pointer;
+	font-weight: 600;
+	font-size: 14px;
+	transition: background 0.2s;
+}
+
+.player-equipment-viewer .close-btn:hover {
+	background: rgba(0, 0, 0, 0.15);
+}
+
+/* Tabs */
+.player-equipment-viewer .sheet-tabs {
+	flex-shrink: 0;
+}
+
+.player-equipment-viewer .content {
+	flex: 1;
+	overflow-y: auto;
+	padding: 10px;
+}
+
+.player-equipment-viewer .tab {
+	display: none;
+}
+
+.player-equipment-viewer .tab.active {
+	display: block;
+}
+
+.player-equipment-viewer h2 {
+	margin-top: 0;
+	padding-bottom: 10px;
+	border-bottom: 2px solid var(--color-border-highlight);
+	color: var(--color-text-heading);
+}
+
+.player-equipment-viewer h3 {
+	margin: 15px 0 10px 0;
+	color: var(--color-text-heading);
+	font-size: 1.1em;
+}
+
+/* Weapons and Equipment Sections */
+.player-equipment-viewer .weapons-section,
+.player-equipment-viewer .equipment-section {
+	margin-bottom: 25px;
+}
+
+.player-equipment-viewer .weapons-section h3,
+.player-equipment-viewer .equipment-section h3 {
+	margin: 0 0 10px 0;
+	color: var(--color-text-heading);
+	font-size: 1em;
+	font-weight: 600;
+}
+
+/* Item List */
+.player-equipment-viewer .item-list {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+/* Item Rows */
+.player-equipment-viewer .item-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px;
+	background: rgba(0, 0, 0, 0.05);
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 3px;
+	margin-bottom: 5px;
+}
+
+.player-equipment-viewer .item-row:hover {
+	background: rgba(0, 0, 0, 0.08);
+}
+
+.player-equipment-viewer .item-checkbox {
+	flex-shrink: 0;
+	margin: 0;
+	cursor: pointer;
+}
+
+.player-equipment-viewer .item-checkbox:disabled {
+	cursor: not-allowed;
+	opacity: 0.5;
+}
+
+.player-equipment-viewer .item-img {
+	width: 32px;
+	height: 32px;
+	border: none;
+	flex-shrink: 0;
+	margin: 0;
+}
+
+.player-equipment-viewer .item-name {
+	flex: 1;
+	font-size: 0.95em;
+	color: var(--color-text-primary);
+}
+
+.player-equipment-viewer .item-percentage {
+	flex: 0 0 50px;
+	text-align: right;
+	font-size: 0.9em;
+	font-weight: 500;
+	color: var(--color-text-primary);
+}
+
+.player-equipment-viewer .item-status {
+	flex: 0 0 130px;
+	text-align: right;
+	font-size: 0.85em;
+	font-weight: 500;
+	padding: 3px 8px;
+	border-radius: 3px;
+}
+
+/* Durability Status Colors */
+.player-equipment-viewer .item-status.durability-good {
+	background: rgba(24, 82, 11, 0.15);
+	color: #18520b;
+}
+
+.player-equipment-viewer .item-status.durability-worn {
+	background: rgba(133, 100, 4, 0.15);
+	color: #856404;
+}
+
+.player-equipment-viewer .item-status.durability-slightly-damaged {
+	background: rgba(204, 102, 0, 0.15);
+	color: #cc6600;
+}
+
+.player-equipment-viewer .item-status.durability-heavily-damaged {
+	background: rgba(201, 42, 42, 0.15);
+	color: #c92a2a;
+	font-weight: bold;
+}
+
+.player-equipment-viewer .item-status.durability-broken {
+	background: rgba(201, 42, 42, 0.15);
+	color: #c92a2a;
+	font-weight: bold;
+}
+
+.player-equipment-viewer .empty {
+	color: var(--color-text-light-6);
+	font-style: italic;
+	margin: 10px 0;
+}
+
+.player-equipment-viewer .no-players {
+	text-align: center;
+	padding: 40px;
+	color: var(--color-text-light-6);
+}

@@ -9,6 +9,9 @@ Hooks.on('renderChatMessage', (message, html) => {
 
 	if (html[0].dataset.messageId !== '') {
 		setTimeout(() => {
+			// Wait for settings to be registered
+			if (!game.settings.settings.has("nyendras-steew-cooker.defenderWinsOnTie")) return;
+
 			const foundHtml = $('li[data-message-id="' + html[0].dataset.messageId + '"]');
 			const diceTotal = foundHtml.find('.dice-total');
 			const attacker = foundHtml.find('.title')[0].innerText;

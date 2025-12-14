@@ -4,6 +4,9 @@
  */
 
 Hooks.on("renderChatMessage", (message, html) => {
+  // Wait for settings to be registered
+  if (!game.settings.settings.has("nyendras-steew-cooker.enableChatTrashIcon")) return;
+
   // Only show delete button if enabled and user is GM
   if (!game.settings.get("nyendras-steew-cooker", "enableChatTrashIcon")) return;
   if (!game.user.isGM) return;

@@ -1,0 +1,125 @@
+<div class="player-equipment-viewer">
+	<section class="reduce-durability-section">
+		<h3>Reduce Durability</h3>
+
+		<div class="form-group inline-group">
+			<label>Reduce durability by:</label>
+			<input type="number" name="durabilityAmount" value="10" min="1" max="100" step="1" />
+		</div>
+
+		<div class="form-row">
+			<div class="form-group half-width">
+				<label>Players:</label>
+				<div class="radio-group">
+					<label>
+						<input type="radio" name="playerSelection" value="all" checked />
+						<span>All players</span>
+					</label>
+					<label>
+						<input type="radio" name="playerSelection" value="selected" />
+						<span>Selected players</span>
+					</label>
+				</div>
+				<div class="player-checkboxes" data-enabled="false">
+					{{#each players}}
+						<label>
+							<input type="checkbox" name="selectedPlayers" value="{{id}}" disabled />
+							<span>{{name}}</span>
+						</label>
+					{{/each}}
+				</div>
+			</div>
+
+			<div class="form-group half-width">
+				<label>Items:</label>
+				<div class="radio-group">
+					<label>
+						<input type="radio" name="itemSelection" value="all" checked />
+						<span>All weapons and equipment</span>
+					</label>
+					<label>
+						<input type="radio" name="itemSelection" value="weapons" />
+						<span>Only weapons</span>
+					</label>
+					<label>
+						<input type="radio" name="itemSelection" value="equipment" />
+						<span>Only equipment</span>
+					</label>
+					<label>
+						<input type="radio" name="itemSelection" value="selected" />
+						<span>Selected</span>
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="button-group">
+			<button type="button" class="reduce-durability-btn">Apply</button>
+			<button type="button" class="reset-btn">Reset</button>
+		</div>
+	</section>
+
+	{{#if players}}
+		<nav class="sheet-tabs tabs" data-group="players">
+			{{#each players}}
+				<a data-action="tab" data-group="players" data-tab="{{id}}" {{#if @first}}class="active"{{/if}}>
+					<span>{{name}}</span>
+				</a>
+			{{/each}}
+		</nav>
+
+		<div class="content">
+			{{#each players}}
+				<div class="tab {{#if @first}}active{{/if}}" data-tab="{{id}}" data-group="players">
+					<h2>{{characterName}}</h2>
+
+					<div class="weapons-section">
+						<h3>Weapons</h3>
+						{{#if weapons}}
+							<div class="item-list">
+								{{#each weapons}}
+									<div class="item-row">
+										<input type="checkbox" class="item-checkbox" data-item-id="{{id}}" data-player-id="{{../id}}" disabled />
+										<img src="{{img}}" alt="{{name}}" class="item-img"/>
+										<span class="item-name">{{name}}</span>
+										<span class="item-percentage">{{durability}}%</span>
+										<span class="item-status {{durabilityClass}}" style="color: {{durabilityColor}}; background-color: {{durabilityColor}}20;">{{durabilityLabel}}</span>
+									</div>
+								{{/each}}
+							</div>
+						{{else}}
+							<p class="empty">No weapons equipped</p>
+						{{/if}}
+					</div>
+
+					<div class="equipment-section">
+						<h3>Equipment</h3>
+						{{#if equipment}}
+							<div class="item-list">
+								{{#each equipment}}
+									<div class="item-row">
+										<input type="checkbox" class="item-checkbox" data-item-id="{{id}}" data-player-id="{{../id}}" disabled />
+										<img src="{{img}}" alt="{{name}}" class="item-img"/>
+										<span class="item-name">{{name}}</span>
+										<span class="item-percentage">{{durability}}%</span>
+										<span class="item-status {{durabilityClass}}" style="color: {{durabilityColor}}; background-color: {{durabilityColor}}20;">{{durabilityLabel}}</span>
+									</div>
+								{{/each}}
+							</div>
+						{{else}}
+							<p class="empty">No equipment equipped</p>
+						{{/if}}
+					</div>
+				</div>
+			{{/each}}
+		</div>
+	{{else}}
+		<div class="no-players">
+			<p>No player characters found.</p>
+		</div>
+	{{/if}}
+
+	<div class="close-button-container">
+		<button type="button" class="close-btn">Close</button>
+	</div>
+</div>

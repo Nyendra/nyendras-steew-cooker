@@ -1,0 +1,54 @@
+<div class="durability-naming-config">
+	<div class="form-group checkbox-group">
+		<label>
+			<input type="checkbox" name="showNames" {{#if showNames}}checked{{/if}} />
+			<span>Show durability name instead of percentage on character sheets</span>
+		</label>
+	</div>
+
+	<div class="tiers-section">
+		<h3>Durability Tiers</h3>
+		<p class="hint">Each tier applies from its threshold down to the next tier's threshold. For example, a tier at 100% applies to durability values from 100% down to (but not including) the next tier.</p>
+
+		<ol class="durability-tiers-table">
+			<li class="table-row table-header flexrow">
+				<div class="tier-threshold"><label>Threshold (%)</label></div>
+				<div class="tier-name"><label>Name</label></div>
+				<div class="tier-color"><label>Color</label></div>
+				<div class="tier-controls">
+					<a class="add-tier-btn" title="Add tier">
+						<i class="fas fa-plus"></i>
+					</a>
+				</div>
+			</li>
+
+			{{#each tiers}}
+				<li class="table-row flexrow">
+					<div class="tier-threshold">
+						<input type="number" class="tier-threshold-input" value="{{threshold}}" min="0" max="100" step="1" />
+					</div>
+					<div class="tier-name">
+						<input type="text" class="tier-name-input" value="{{name}}" />
+					</div>
+					<div class="tier-color">
+						<input type="color" class="tier-color-input" value="{{color}}" />
+					</div>
+					<div class="tier-controls">
+						<a class="remove-tier-btn" data-index="{{@index}}" title="Remove tier">
+							<i class="fas fa-trash"></i>
+						</a>
+					</div>
+				</li>
+			{{/each}}
+		</ol>
+	</div>
+
+	<footer class="sheet-footer flexrow">
+		<button type="button" name="reset" class="reset-btn">
+			<i class="fas fa-undo"></i> Reset Defaults
+		</button>
+		<button type="button" name="submit" class="save-btn">
+			<i class="far fa-save"></i> Save Changes
+		</button>
+	</footer>
+</div>
