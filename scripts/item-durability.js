@@ -282,9 +282,19 @@ function addDurabilityToSheet(sheet, html) {
 }
 
 /**
- * Track attack and damage rolls for weapons
+ * Track which messages we've already processed to avoid double-counting
+ * Format: "messageId:attack" or "messageId:damage"
  */
-Hooks.on("createChatMessage", async (message) => {
+const processedRolls = new Set();
+
+/**
+ * Track attack and damage rolls for weapons
+ * Compatible with standard dnd5e and Ready Set Roll
+ *
+ * Using renderChatMessage instead of createChatMessage because Ready Set Roll
+ * injects content and sets flags AFTER the message is created
+ */
+Hooks.on("renderChatMessage", async (message, html, data) => {
 	// Check if this is a roll message
 	if (!message.rolls || message.rolls.length === 0) return;
 
@@ -302,13 +312,26 @@ Hooks.on("createChatMessage", async (message) => {
 	// Check if item is equipped
 	if (!item.system.equipped) return;
 
-	// Determine if this is an attack roll or damage roll
-	const rollType = message.flags?.dnd5e?.roll?.type;
+	// Determine if this has an attack roll
+	const hasAttack = message.flags?.rsr5e?.renderAttack === true ||
+	                  message.flags?.dnd5e?.roll?.type === "attack";
 
-	if (rollType === "attack") {
+	// Determine if this has a damage roll
+	const hasDamage = message.flags?.rsr5e?.renderDamage === true ||
+	                  message.flags?.dnd5e?.roll?.type === "damage";
+
+	// Track attack rolls (only if we haven't already processed this message's attack)
+	const attackKey = `${message.id}:attack`;
+	if (hasAttack && !processedRolls.has(attackKey)) {
 		await ItemDurability.incrementAttackRolls(item);
-	} else if (rollType === "damage") {
+		processedRolls.add(attackKey);
+	}
+
+	// Track damage rolls (only if we haven't already processed this message's damage)
+	const damageKey = `${message.id}:damage`;
+	if (hasDamage && !processedRolls.has(damageKey)) {
 		await ItemDurability.incrementDamageRolls(item);
+		processedRolls.add(damageKey);
 	}
 });
 
@@ -339,7 +362,9 @@ Hooks.on("updateActor", async (actor, changes, options, userId) => {
 	// Check if we stored damage to track
 	if (!options.durabilityDamageTaken) return;
 
+	// Get the damage and immediately delete it from options to prevent re-entry
 	const damageTaken = options.durabilityDamageTaken;
+	delete options.durabilityDamageTaken;
 
 	// Add damage to all equipped equipment
 	for (const item of actor.items) {

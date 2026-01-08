@@ -151,6 +151,7 @@ export class PlayerEquipmentViewer extends foundry.applications.api.HandlebarsAp
 		const amount = parseInt(htmlElement.querySelector('input[name="durabilityAmount"]').value);
 		const playerSelection = htmlElement.querySelector('input[name="playerSelection"]:checked').value;
 		const itemSelection = htmlElement.querySelector('input[name="itemSelection"]:checked').value;
+		const resetStats = htmlElement.querySelector('input[name="resetStats"]').checked;
 
 		if (!amount || amount <= 0) {
 			ui.notifications.warn("Please enter a valid durability reduction amount.");
@@ -205,11 +206,26 @@ export class PlayerEquipmentViewer extends foundry.applications.api.HandlebarsAp
 				const currentDurability = ItemDurability.getDurability(item);
 				const newDurability = Math.max(0, currentDurability - amount);
 				await ItemDurability.setDurability(item, newDurability);
+
+				// Reset stats if checkbox is checked
+				if (resetStats) {
+					if (item.type === 'weapon') {
+						await ItemDurability.setAttackRolls(item, 0);
+						await ItemDurability.setDamageRolls(item, 0);
+					} else if (item.type === 'equipment') {
+						await ItemDurability.setDamageTaken(item, 0);
+					}
+				}
+
 				itemsAffected++;
 			}
 		}
 
-		ui.notifications.info(`Reduced durability by ${amount}% for ${itemsAffected} item(s).`);
+		let message = `Reduced durability by ${amount}% for ${itemsAffected} item(s).`;
+		if (resetStats) {
+			message += ` Stats reset.`;
+		}
+		ui.notifications.info(message);
 
 		// Update durability values in the DOM without re-rendering
 		for (const player of players) {
@@ -247,6 +263,18 @@ export class PlayerEquipmentViewer extends foundry.applications.api.HandlebarsAp
 					statusElement.style.color = newColor;
 					statusElement.style.backgroundColor = `${newColor}20`;
 				}
+
+				// Update stat displays if stats were reset
+				if (resetStats) {
+					if (item.type === 'weapon') {
+						const statElements = itemRow.querySelectorAll('.item-stat');
+						if (statElements[0]) statElements[0].textContent = 'A: 0';
+						if (statElements[1]) statElements[1].textContent = 'D: 0';
+					} else if (item.type === 'equipment') {
+						const statElement = itemRow.querySelector('.item-stat');
+						if (statElement) statElement.textContent = 'DMG: 0';
+					}
+				}
 			}
 		}
 	}
@@ -281,6 +309,10 @@ export class PlayerEquipmentViewer extends foundry.applications.api.HandlebarsAp
 			cb.disabled = true;
 			cb.checked = false;
 		});
+
+		// Uncheck reset stats checkbox
+		const resetStatsCheckbox = htmlElement.querySelector('input[name="resetStats"]');
+		if (resetStatsCheckbox) resetStatsCheckbox.checked = false;
 	}
 
 	async _handleResetStats(playerId, itemId) {
