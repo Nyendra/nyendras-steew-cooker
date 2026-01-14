@@ -302,6 +302,9 @@ Hooks.on("renderChatMessage", async (message, html, data) => {
 	const actor = message.speaker?.actor ? game.actors.get(message.speaker.actor) : null;
 	if (!actor) return;
 
+	// Only update if current user has permission (is GM or owns the actor)
+	if (!game.user.isGM && !actor.isOwner) return;
+
 	// Get the item ID from the message flags (dnd5e v3+ structure)
 	const itemId = message.flags?.dnd5e?.item?.id;
 	if (!itemId) return;
@@ -361,6 +364,9 @@ Hooks.on("preUpdateActor", async (actor, changes, options, userId) => {
 Hooks.on("updateActor", async (actor, changes, options, userId) => {
 	// Check if we stored damage to track
 	if (!options.durabilityDamageTaken) return;
+
+	// Only update if current user has permission (is GM or owns the actor)
+	if (!game.user.isGM && !actor.isOwner) return;
 
 	// Get the damage and immediately delete it from options to prevent re-entry
 	const damageTaken = options.durabilityDamageTaken;
