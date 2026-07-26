@@ -23,6 +23,23 @@
   font-size: 0.875em;
 }
 
+/* Combat end GM prompt */
+.nsc-combat-end {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nsc-combat-end-title {
+  margin: 0;
+  font-weight: bold;
+}
+
+.nsc-combat-end button.nsc-open-equipment-viewer {
+  width: 100%;
+  cursor: pointer;
+}
+
 /* Ensure the delete button aligns properly with other message controls */
 .message-header {
   display: flex;

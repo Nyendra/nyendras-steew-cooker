@@ -29,6 +29,7 @@
     "scripts/durability-naming-config.js",
     "scripts/chat-trash-icon.js",
     "scripts/chat-combat-color-fix.js",
+    "scripts/combat-end-message.js",
     "scripts/main.js"
   ],
   "styles": [

@@ -53,6 +53,16 @@ Hooks.once("init", () => {
 		default: true
 	});
 
+	// Combat End Message setting
+	game.settings.register("nyendras-steew-cooker", "enableCombatEndMessage", {
+		name: "Combat End Equipment Prompt",
+		hint: "Whisper a GM-only chat message when combat ends, with a button to open the equipment viewer.",
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: true
+	});
+
 	// Defender Wins on Tie setting
 	game.settings.register("nyendras-steew-cooker", "defenderWinsOnTie", {
 		name: "Defender Wins on Tie",
